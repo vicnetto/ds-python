@@ -1,2 +1,2 @@
-# py-learn
-Some annotations (in portuguese) about Data Science and Machine Learning.
+# ai-learn
+Annotations (in portuguese) about some AI subfields like Machine Learning and Data Science. 
