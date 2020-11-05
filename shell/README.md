@@ -94,7 +94,7 @@ O processo de criação de funções é extremamente simples, e vem junto com o 
 #!/bin/bash
 
 print_name() {
-# Essa variável só será inicializada se existir esse arquivo no diretório ~.
+# Essa variável só será inicializada se existir esse arquivo no diretório ~
 VAR=$(ls nome.png)
 echo $VAR
 }
@@ -107,3 +107,51 @@ else
     "Ocorreu um erro na abertura do arquivo"
 fi
 ```
+
+## Realizando uma varredura em arquivos para a transformação
+
+Para realizar uma varredura nos arquivos, será necessário a utilização de funções **recursivas**. Ao entrar em cada pasta, será verificado se é possível fazer a transformação, caso não seja possível, será chamado a função novamente. Para fazer isso podemos fazer o seguinte código:
+
+```bash
+#!/bin/bash
+
+sweep_all_files () {
+
+cd $1
+
+for archive in *
+do
+	local path=$(find ~/Personal/1-Programming/5-Shell/1-Shell-Learning/3-Imagens-Novos-Livros/ -name $archive)
+
+	if [ -d $path ]
+	then
+		sweep_all_files $path
+	else
+		local name=$(echo $path | awk -F. '{ print $1 }')
+		convert ${name}.jpg ${name}.png
+	fi
+done
+}
+
+sweep_all_files ~/Personal/1-Programming/5-Shell/1-Shell-Learning/3-Imagens-Novos-Livros/
+if [ $? -eq 0 ]
+then
+	echo "Success!"
+else
+	echo "Failure in the process"
+fi
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
