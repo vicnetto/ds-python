@@ -12,9 +12,9 @@ Basicamente um banco de dados armazena dados, como login, senha, id de usuário 
 
 ## Entre todos os bancos de dados, qual foi o escolhido?
 
-Devido a diversos fatores, os comandos apresentados nesse documento serão pertencentes do **PostgreSQL**.
+Devido a diversos fatores, os comandos apresentados nesse documento serão pertencentes ao **PostgreSQL**, apesar de serem extremamente semelhantes aos comandos **MySQL**.
 
-## Alguns comandos básicos de **PostgreeSQL**:
+## Alguns comandos básicos do **PostgreeSQL**:
 
 1. Tabelas:
     **Tabelas** são dados armazenados em colunas, como as próprias tabelas do Excel.
@@ -27,6 +27,13 @@ Devido a diversos fatores, os comandos apresentados nesse documento serão perte
     - É possível utilizar nas condições do *where* frases como: **AGE IN (25, 27)** ou **NAME LIKE 'Pa%'**.
 - **SELECT** *operation* **AS** *operationName* -> Fazendo operações matemáticas com o *PostgreSQL*.
     - Algumas operações podem ser realizadas como **avg()**, **sum()** e **count()** nas colunas.
+- **SELECT** * **FROM** *tableName* **WHERE** *columns* **LIKE** '%x%'; -> Mostra os dados dos usuários que apresentam um x no meio do nome.
+    - É possível também utilizar um underscore(_) para indicar que só existe mais um elemento apenas.
+    - Só é possível comparar com **strings**, portanto seria necessário castar as colunas de *int* para String, fazendo **COLUNA::text**.
+- **UPDATE** *tableName* **SET** *column = value* **WHERE** *condition* -> Para atualizar o valor de um objeto na tabela. 
+- **DELETE FROM** *tableName* **WHERE** *condition* -> Deleta os dados que satisfazem a condição.
+    - Para deletar todos os dados só é necessário escrever **DELETE FROM** *tableName*, sem a condição *where*.
+
 
 2. Schemas:
     **Schemas** são coleções de tabelas. Na verdade os *schemas* podem incluir muito mais do que apenas tabelas, como views, indexes, sequências, operadores e funções.
