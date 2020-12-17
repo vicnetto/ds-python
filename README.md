@@ -11,3 +11,5 @@ Annotations (in portuguese) about some fields that i'm currently working on.
     - Numpy
     - Web Scraping
 - Shell
+- PostgreSQL
+- Spring (Java Framework)
