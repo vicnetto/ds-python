@@ -84,3 +84,25 @@ As classes de configuração são utilizadas para definir **beans** em classes q
 - **@ComponentScan("*package*")** :arrow_forward: Busca por componentes em um certo pacote passado por parâmetro.
 - **@Primary** :arrow_forward: Define um *bean* como primário, sendo procurado antes que os outros.
 - **@Qualifier *name*** :arrow_forward: Coloca um *bean* como preferencial.
+
+# **Spring MVC**
+
+O *Spring MVC* é um dos projetos do *Spring*, focado em desenvolvimento WEB. É formado por componentes que ficam todo o tempo desmembrados. Entre eles temos: **Controller** (processa as requisições e se interconecta com o *Model*), **View** (parte visual, apresentando interação com o usuário) e **Model** (onde ficam armazenadas as regras). 
+
+> O modelo *MVC* já é utilizado a muito tempo para aplicações *WEB*, não sendo criada pelo *Spring*.
+
+As vantagens de utilizar o *Spring MVC* são as mesmas que utilizar qualquer projeto *Spring*, visando criar programas de fácil manutenção, com configurações iniciais pré-selecionadas e com ótima segurança.
+
+## Como funciona uma operação **Spring MVC**?
+
+É feita uma solicitação *HTTP* por meio de um navegador utilizando um *URL*, isso é repassado para a classe **Controller**. Essa classe, busca dentro do sistema classes responsáveis a realizarem tal necessidade do internauta, enviando para a ala **Model**. Assim, logo após realizar sua tarefa, a classe *Model* retorna para *Controller* quais ações deverão ser tomadas. Por fim, *Controller* enviará quais atitudes devem ser tomadas para a classe **View**, que gerará uma resposta em formato *HTML* novamente.
+
+![Spring MVC](https://i.ibb.co/s28ns1f/Whats-App-Image-2020-12-19-at-6-36-24-PM.jpg)
+
+> É sempre importante separar as funções de cada classe. *Controller* e *View* não devem saber com o que estão interagindo (se é um banco de dados, por exemplo), isso é função da camada de serviço.
+
+## O que colocar em cada classe?
+
+Primeiramente na classe **Controller**, é importante saber algumas tags utilizadas, como:
+
+- **@RequestMapping("*command*")** :arrow_forward: Essa parte insere um comando para ser capturado pelo *URL*. Deve ser inserido logo acima do método.
