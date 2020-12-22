@@ -106,3 +106,10 @@ As vantagens de utilizar o *Spring MVC* são as mesmas que utilizar qualquer pro
 Primeiramente na classe **Controller**, é importante saber algumas tags utilizadas, como:
 
 - **@RequestMapping("*command*")** :arrow_forward: Essa parte insere um comando para ser capturado pelo *URL*. Deve ser inserido logo acima do método.
+	- É possível apresentar parâmentros dentro do *@RequestMapping*, do seguinte jeito: **@RequestMapping("/product/{id})**, nesse comando um parâmetro *ID* está sendo passado, e deve ser recolhido pelos parâmetros da função, com a tag **@PathVariable**.
+
+## **CRUD**
+
+Sabendo o funcionamento do **Spring MVC** é necessário a criação do **CRUD** para o básico da aplicação. O *CRUD* são quatro operações básicas utilizadas em bancos de dados, ou seja: **Create** (INSERT), **Read** (SELECT), **Update** (UPDATE) e **Delete** (DELETE).
+
+> É sempre importante tentar reutilizar o código, como nas funções *Insert* e *Update* que são extremamente parecidas. Logicamente, em projetos mais longos, é bom separar as funções, mas caso seja possível a sua junção, é sempre bom utilizar.
