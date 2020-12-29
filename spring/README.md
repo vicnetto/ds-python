@@ -101,6 +101,18 @@ As vantagens de utilizar o *Spring MVC* são as mesmas que utilizar qualquer pro
 
 > É sempre importante separar as funções de cada classe. *Controller* e *View* não devem saber com o que estão interagindo (se é um banco de dados, por exemplo), isso é função da camada de serviço.
 
+Entre os motivos de cada atribuição temos:
+
+1.  Um _controller_ recebe a requisição do usuário.
+2.  Esse _controller_ chama o método do _service_ adequado para obter as informações para aquela página.
+3.  O _service_ chama um ou mais métodos de _DAOs_ para obter as informações necessárias e retorna os dados para o _controller_.
+4.  O _controller_ recebe os dados e redireciona o usuário para uma _view_ que vai renderizar o HTML da página.
+
+Adicionalmente, temos que:
+
+-   Controllers executam lógica relacionada à navegação do usuário no sistema, isto é, qual URL ou qual ação exibe qual página.
+-   Services executam a lógica do sistema, que pode incluir gerenciar transações e processar os dados.
+
 ## O que colocar em cada classe?
 
 Primeiramente na classe **Controller**, é importante saber algumas tags utilizadas, como:
@@ -113,3 +125,77 @@ Primeiramente na classe **Controller**, é importante saber algumas tags utiliza
 Sabendo o funcionamento do **Spring MVC** é necessário a criação do **CRUD** para o básico da aplicação. O *CRUD* são quatro operações básicas utilizadas em bancos de dados, ou seja: **Create** (INSERT), **Read** (SELECT), **Update** (UPDATE) e **Delete** (DELETE).
 
 > É sempre importante tentar reutilizar o código, como nas funções *Insert* e *Update* que são extremamente parecidas. Logicamente, em projetos mais longos, é bom separar as funções, mas caso seja possível a sua junção, é sempre bom utilizar.
+
+## **Spring MVC Test**
+
+O *Spring MVC Test* era um projeto *stand alone* e foi aderido ao *Spring Framework* na versão 3.2. Esse projeto faz algumas situações de banco de dados "reais" para testar se o seu programa está funcionando corretamente, conhecido com "mock databases".
+
+- Permite teste na configuração do framework.
+- Não tem necessidade do *Tomcat* por exemplo, podemos ser extremamente rápido.
+
+Uma das ferramentas mais populares de teste é o **JUnit**, extremamente utilizada para o Java e em conjunção com o *Spring MVC Test*. Como o *JUnit* não tem nenhuma *mocking facilities*, é necessário o framework **Mockito** para injetar objetos, como serviços.
+
+> O método *when(...).thenReturn(...)* é utilizado para especificar uma condição e um valor de retorno para essa condição.
+
+> **Integration Test** é um teste que não é executada somente em uma porção do código, é necessário carregar e popular o banco de dados, além de iniciar o *Spring*.
+
+## Java Persistence API (JPA)
+
+O *Java Persistence API* é uma *API* voltada à frameworks de persistência de dados (armazenamento do estado dos dados, processo feito nos discos rígidos, por exemplo). É fortemente ligada com o **Hibernate**, outro framework voltado a diminuir a complexidade entre os programas Java, transformando dados e tabelas do Java para **SQL**.
+
+Entre alguns conceitos de **JPA**, temos:
+
+- **JPA Entity**: é um simples **POJO** *(Plain Old Java Object)*, onde apresenta todos os *setters* e *getters*.
+- **Entity Manager**: retira (*fetch*) e insere (*persist*) objetos do banco de dados. Trata toda a linguagem relacional por de baixo dos panos.
+- **Transactions**: permite realizar um *rollback* ou um *commit*, permitindo caso ocorram erros, de voltar atrás na decisão.
+- **Relationships**: existem diversos relacionamentos, entre eles,
+	- OneToOne.
+	- OneToMany/ManyToOne.
+	- ManyToMany.
+	- Embedded.
+- **Criteria API**: é uma *API* utilizada para retirar objetos do banco de dados. A vantagem dessa *API* é que apresenta uma conversão direta. 
+- **Data Access Objects (DAO's)**: apesar do *JPA* ser ótimo, as vezes pode ser considerado um pouco "furado", sabendo que alguns detalhes passam batidos na implemetação. Por isso, os *DAO's* permitem uma abstração mais clara de como lidar com *Entity Manager's* e *Transactions*.
+- **Repository Pattern**: Extremamente parecido com os *DAO's*, oferece uma maior abstração do que o *DAO*. É extremamente utilizado pelo **Spring Data JPA** e se torna cada vez mais popular.  
+- **Bootstrap**: faz parte do *startup* do projeto. Toda vez que for iniciado, é passado pelo *bootstrap* para fazer a inicialização.
+	- Para fazer um *Bootstrap* é necessário declarar a seguinte função:
+	``public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedEvent> { ... }``.
+
+Alguns comandos importantes para o **JPA** são:
+- **@Entity@** :arrow_forward: Gera uma entidade JPA, que será convertida para o atual banco de dados.
+- **@Id** :arrow_forward: Declara o ID do elemento.
+- **@GeneratedValue** :arrow_forward: Gera um valor para o nosso elemento, no caso do id é possível escolher algumas opções, entre elas o *AUTO*, para selecionar automaticamente.
+- **@Version** :arrow_forward: Gera um versionamento do programa. Isso serve para não ocorrer duas atualizações ao mesmo tempo, e uma sobrescrever a outra.
+
+## Para inicializar o H2
+
+Para inicializar o H2 são necessários alguns comandos no **application.properties**, como:
+
+```java
+spring.h2.console.enabled=true  // Habilita o console.
+spring.h2.console.path=/h2  // Muda o url padrão.
+spring.datasource.url=jdbc:h2:mem:testdb // Muda o caminho padrão.
+```
+
+Durante toda execução, as entidades são lidas pelo compilador, passadas para o *H2*, os códigos *SQL* são gerados e as tabelas serão geradas.
+
+> As colunas nas tabelas são geradas de uma forma diferenciada, ela transforma todos os **CamelCase's** em palavras maiúsculas separadas com um *underscore*.
+
+## Um exemplo do funcionamento do DAO
+
+**DAO** é um padrão de projetos utilizado para realizar a leitura ou a inserção de dados no banco de dados necessário. Um exemplo de como pode ser uma função *DAO* está abaixo:
+
+```java
+@Override // De uma outra interface.
+public Product saveOrUpdateProduct(Product product) {  
+	// Acessa cria uma entidade para acessar o banco de dados, faz todo o
+	// serviço de baixo dos panos.
+	EntityManager em = emf.createEntityManager();
+  
+	em.getTransaction().begin();  // Começa uma transação, irá ocorrer
+				      // mudança nos dados.
+	Product newProduct = em.merge(product);  // Insere ou edita o novo elemento.
+	em.getTransaction().commit();  // Atualiza a versão.
+  
+	return newProduct;  
+}
+```
