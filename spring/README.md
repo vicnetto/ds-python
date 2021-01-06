@@ -165,6 +165,7 @@ Alguns comandos importantes para o **JPA** são:
 - **@Id** :arrow_forward: Declara o ID do elemento.
 - **@GeneratedValue** :arrow_forward: Gera um valor para o nosso elemento, no caso do id é possível escolher algumas opções, entre elas o *AUTO*, para selecionar automaticamente.
 - **@Version** :arrow_forward: Gera um versionamento do programa. Isso serve para não ocorrer duas atualizações ao mesmo tempo, e uma sobrescrever a outra.
+- **@Transient** :arrow_forward: Não é armazenado no banco de dados, é apenas uma variável local.
 
 ## Para inicializar o H2
 
@@ -199,3 +200,26 @@ public Product saveOrUpdateProduct(Product product) {
 	return newProduct;  
 }
 ```
+
+## JPA Entity Relationships
+
+Existem diversos tipos de relacionamentos, como foi citado acima. Esses relacionamentos são extremamente importantes para manter uma ligação entre o código, podendo utilizar implementações dentro de implementações, o que seria impossível sem esse recurso.
+
+> Um detalhe importante de ser citado é que sempre a classe onde está colocando a tag, tem o primeiro nome. Por exemplo, ao inserir *@ManyToOne* em alguma variável, *Many* está se referindo a própria classe, e o *One*, à variável.
+
+Entre eles temos:
+- **@OneToOne - Unidirecional**: Relaciona apenas uma classe a outra classe.
+	- Ex.: Um consumidor é um usuário, como um usuário é um consumidor.
+	-  É possível utilizar o comando **@OneToOne(cascade = {CascadeType.ALL})** para possibilitar  a implementação. *Cascade* é a dependência da existência do primeiro para a utilização do segundo.
+	- Para fazer uma nova instanciação no banco de dados da classe pai, é necessário fazer uma instância da menor para inseri-la.
+- **@OneToOne - Bidirecional**: As duas classes se relacionam.
+	- Ex.: Um consumidor e um usuário (dessa vez da forma certa).
+	- Nesse caso, na classe filha é necessário declarar somente um *@OneToOne* e na pai é bom deixar somente a função como *delete* , para não gerar o efeito cascata.
+- **@ManyToOne**: Muitas classes se relacionam com apenas uma.
+- **@Embedded**: Ao utilizar uma entidade com essa *tag*, irá torna-la parte da mesma tabela, não formando uma tabela separada. 
+- **@ManyToMany**: Essa é uma das relações mais complicadas, sendo de vários elementos para vários elementos.
+	- Ex.: Um exemplo pode ser pessoas e funções dentro de uma empresa.
+	- **@JoinTable** é uma tabela intermediária para relações *Many to Many*. Ela salva ID's das duas entidades, formando uma terceira tabela.
+	- Como esperado, se os dois são separados, eles não serão deletados.
+ 
+
